@@ -1,0 +1,38 @@
+name: interview_env
+description: AI Placement Interview Trainer — agent asks questions, evaluates answers, and makes hire/reject decisions across three difficulty levels.
+version: 1.0
+
+entry_point: env.interview_env:InterviewEnv
+
+tasks:
+  - name: easy
+    description: Evaluate correctness of a candidate answer to a technical question.
+    grader: graders.easy_grader:grade_easy
+
+  - name: medium
+    description: Ask a relevant question targeting the candidate's identified weak domain.
+    grader: graders.medium_grader:grade_medium
+
+  - name: hard
+    description: Full interview — ask, evaluate, then decide hire or reject correctly.
+    grader: graders.hard_grader:grade_hard
+
+observation_space:
+  type: dict
+  fields:
+    question: string
+    answer: string
+    history: list
+    score: float
+    steps_left: integer
+    candidate_type: string
+    weak_domain: string
+
+action_space:
+  type: dict
+  fields:
+    type: string   # ask | evaluate | final_decision
+    content: string
+
+reward_range: [-0.3, 0.5]   # per-step bounds (total accumulates across steps)
+max_steps: 6
