@@ -4,6 +4,13 @@ import subprocess
 app = FastAPI()
 
 @app.get("/")
-def run_env():
-    result = subprocess.getoutput("python inference.py")
-    return {"output": result}
+def home():
+    return {"status": "running"}
+
+@app.get("/reset")
+def reset():
+    try:
+        output = subprocess.getoutput("python inference.py")
+        return {"output": output}
+    except Exception as e:
+        return {"error": str(e)}
